@@ -1,0 +1,12 @@
+@charset "utf-8";
+
+$scheme-main: #383838;
+$scheme-invert: #b8edc2;
+$text-strong: #12e000;
+
+@import "../node_modules/bulma/bulma.sass";
+
+.m-text {
+  font-size: 1.3rem;
+  color: $success;
+}
