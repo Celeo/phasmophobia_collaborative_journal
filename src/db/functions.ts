@@ -1,4 +1,4 @@
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { SupabaseClient } from "@supabase/supabase-js";
 import { toast } from "bulma-toast";
 import {
   uniqueNamesGenerator,
@@ -6,15 +6,6 @@ import {
   colors,
   animals,
 } from "unique-names-generator";
-
-export function supabase(): SupabaseClient {
-  const url = process.env.REACT_APP_SUPABASE_URL;
-  const key = process.env.REACT_APP_SUPABASE_KEY;
-  if (!url || !key) {
-    throw new Error("Supabase URL or key missing from environment");
-  }
-  return createClient(url, key);
-}
 
 interface UsernameQuery {
   username: string;
