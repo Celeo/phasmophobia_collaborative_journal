@@ -3,7 +3,7 @@ import { Redirect, useHistory } from "react-router-dom";
 import { toast } from "bulma-toast";
 import { supabase } from "./db";
 
-export const AuthSignIn = (): React.ReactElement => {
+export function AuthSignIn() {
   const [email, setEmail] = React.useState("");
   const [inputErrors, setInputErrors] = React.useState<Array<string>>([]);
   const [supabaseError, setSupabaseError] = React.useState<string | null>(null);
@@ -72,7 +72,7 @@ export const AuthSignIn = (): React.ReactElement => {
           </div>
         </div>
       </div>
-      <div className="field is-grouped">
+      <div className="field">
         <div className="control">
           <button
             className="button is-link is-primary"
@@ -96,9 +96,9 @@ export const AuthSignIn = (): React.ReactElement => {
       </div>
     </div>
   );
-};
+}
 
-export const AuthSignOut = (): React.ReactElement => {
+export function AuthSignOut() {
   React.useEffect(() => {
     (async function () {
       await supabase().auth.signOut();
@@ -106,5 +106,5 @@ export const AuthSignOut = (): React.ReactElement => {
     })();
   }, []);
 
-  return <Redirect to="/auth/sign-in" />;
-};
+  return <Redirect to="/" />;
+}

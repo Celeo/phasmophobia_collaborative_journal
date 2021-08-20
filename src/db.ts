@@ -1,12 +1,96 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { toast } from "bulma-toast";
+import {
+  uniqueNamesGenerator,
+  adjectives,
+  colors,
+  animals,
+} from "unique-names-generator";
 
-// TODO table models
-
-export const supabase = (): SupabaseClient => {
+export function supabase(): SupabaseClient {
   const url = process.env.REACT_APP_SUPABASE_URL;
   const key = process.env.REACT_APP_SUPABASE_KEY;
   if (!url || !key) {
     throw new Error("Supabase URL or key missing from environment");
   }
   return createClient(url, key);
-};
+}
+
+interface UsernameQuery {
+  username: string;
+}
+
+export async function loadUserName(
+  db: SupabaseClient,
+  uuid: string
+): Promise<string> {
+  const { data, error } = await db
+    .from("usernames")
+    .select("username")
+    .eq("user_id", uuid);
+
+  if (error) {
+    console.error("Error loading username from DB:", error);
+    toast({
+      message: "Error loading username from database",
+      type: "is-danger",
+      position: "top-right",
+      duration: 5000,
+    });
+    return "-- error --";
+  }
+
+  if (data == null || data.length === 0) {
+    const newName = createRandomName();
+    await insertNewUsername(db, uuid, newName);
+    return newName;
+  }
+  return (data as Array<UsernameQuery>)[0].username;
+}
+
+async function insertNewUsername(
+  db: SupabaseClient,
+  uuid: string,
+  name: string
+): Promise<void> {
+  const { error } = await db
+    .from("usernames")
+    .insert([{ user_id: uuid, username: name }]);
+
+  if (error) {
+    toast({
+      message: "Error saving generated name to the database",
+      type: "is-danger",
+      position: "top-right",
+      duration: 5000,
+    });
+  }
+}
+
+export async function updateUsername(
+  db: SupabaseClient,
+  uuid: string,
+  name: string
+): Promise<void> {
+  const { error } = await db
+    .from("usernames")
+    .update({ username: name })
+    .eq("user_id", uuid);
+
+  if (error) {
+    toast({
+      message: "Error saving new name to the database",
+      type: "is-danger",
+      position: "top-right",
+      duration: 5000,
+    });
+  }
+}
+
+function createRandomName(): string {
+  return uniqueNamesGenerator({
+    separator: "-",
+    length: 2,
+    dictionaries: [adjectives, colors, animals],
+  });
+}

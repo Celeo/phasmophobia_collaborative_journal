@@ -1,9 +1,9 @@
 import React from "react";
 
-export const Home = (): React.ReactElement => {
+export function Home() {
   return (
-    <div>
-      <p className="m-text">Home</p>
+    <div className="content">
+      <h2>Welcome!</h2>
     </div>
   );
-};
+}

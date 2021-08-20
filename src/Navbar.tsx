@@ -1,10 +1,10 @@
 import React from "react";
 import { useLocation, Link } from "react-router-dom";
-import { supabase } from "./db";
+import { AppStore } from "./store";
 
-export const Navbar = (): React.ReactElement => {
+export function Navbar() {
   const current = useLocation().pathname;
-  const currentSession = supabase().auth.session();
+  const loggedIn = AppStore.useState((store) => store.loggedIn);
 
   const linkClassName = (path: string): string => {
     if (current === path) {
@@ -13,16 +13,20 @@ export const Navbar = (): React.ReactElement => {
     return "navbar-item";
   };
 
-  const authButtons =
-    currentSession === null ? (
-      <Link to="/auth/sign-in" className={linkClassName("/auth/sign-in")}>
-        Sign in
+  const authButtons = loggedIn ? (
+    <>
+      <Link to="/auth/profile" className={linkClassName("/auth/profile")}>
+        Profile
       </Link>
-    ) : (
       <Link to="/auth/sign-out" className={linkClassName("/auth/sign-out")}>
         Sign out
       </Link>
-    );
+    </>
+  ) : (
+    <Link to="/auth/sign-in" className={linkClassName("/auth/sign-in")}>
+      Sign in
+    </Link>
+  );
 
   return (
     <nav
@@ -40,12 +44,12 @@ export const Navbar = (): React.ReactElement => {
           <Link to="/" className={linkClassName("/")}>
             Home
           </Link>
-          {currentSession !== null && (
+          {loggedIn && (
             <Link to="/rooms" className={linkClassName("/rooms")}>
               Create/join room
             </Link>
           )}
-          {currentSession === null && (
+          {!loggedIn && (
             <Link to="/rooms" className={linkClassName("/rooms")}>
               View room
             </Link>
@@ -55,4 +59,4 @@ export const Navbar = (): React.ReactElement => {
       </div>
     </nav>
   );
-};
+}
