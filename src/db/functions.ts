@@ -18,7 +18,7 @@ export async function loadUserName(
   const { data, error } = await db
     .from("usernames")
     .select("username")
-    .eq("user_id", uuid);
+    .eq("userId", uuid);
 
   if (error) {
     console.error("Error loading username from DB:", error);
@@ -46,7 +46,7 @@ async function insertNewUsername(
 ): Promise<void> {
   const { error } = await db
     .from("usernames")
-    .insert([{ user_id: uuid, username: name }]);
+    .insert([{ userId: uuid, username: name }]);
 
   if (error) {
     toast({
@@ -66,7 +66,7 @@ export async function updateUsername(
   const { error } = await db
     .from("usernames")
     .update({ username: name })
-    .eq("user_id", uuid);
+    .eq("userId", uuid);
 
   if (error) {
     toast({
