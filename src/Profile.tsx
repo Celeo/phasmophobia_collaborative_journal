@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { loadUserName, supabase, updateUsername } from "./db";
+import { loadUserName, updateUsername } from "./db";
 import { toast } from "bulma-toast";
 import { AppStore } from "./store";
 
@@ -9,6 +9,7 @@ const MAXIMUM_NAME_LENGTH = 20;
 function ChangeUsername() {
   const [newName, setNewName] = useState("");
   const [inputErrors, setInputErrors] = useState<Array<string>>([]);
+  const supabase = AppStore.useState((s) => s.supabase);
 
   useEffect(() => {
     const errors = [];
@@ -27,13 +28,12 @@ function ChangeUsername() {
   }, [newName]);
 
   const change = async () => {
-    const db = supabase();
-    const uuid = db.auth.user()?.id;
+    const uuid = supabase.auth.user()?.id;
     if (uuid == null) {
       console.error("Attempting to update username for a missing user ID");
       return;
     }
-    await updateUsername(db, uuid, newName);
+    await updateUsername(supabase, uuid, newName);
     AppStore.update((store) => {
       store.username = newName;
     });
@@ -90,32 +90,36 @@ function ChangeUsername() {
 
 export function Profile() {
   const [currentUsername, setCurrentUsername] = useState("");
+  const supabase = AppStore.useState((s) => s.supabase);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [userUUID, setUserUUID] = useState(supabase.auth.user()?.id);
 
   React.useEffect(() => {
     (async function () {
-      const db = supabase();
-      const uuid = db.auth.user()?.id;
+      const uuid = supabase.auth.user()?.id;
       if (uuid == null) {
         console.error(
           "Attempting to load username on profile page for user who apparently isn't signed in"
         );
         return "";
       }
-      const username = await loadUserName(db, uuid);
+      const username = await loadUserName(supabase, uuid);
       setCurrentUsername(username);
-
-      const updatedSubscription = db
-        .from("usernames")
-        .on("UPDATE", (payload) => {
-          setCurrentUsername(payload.new.username);
-        })
-        .subscribe();
-
-      return () => {
-        updatedSubscription.unsubscribe();
-      };
     })();
-  }, []);
+
+    const sub = supabase
+      .from("usernames")
+      .on("UPDATE", (payload) => {
+        if (payload.new.userId === userUUID) {
+          setCurrentUsername(payload.new.username);
+        }
+      })
+      .subscribe();
+
+    return () => {
+      sub.unsubscribe();
+    };
+  });
 
   return (
     <div className="content">

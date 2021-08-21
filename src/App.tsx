@@ -12,15 +12,14 @@ import { Home } from "./Home";
 import { Rooms } from "./Rooms";
 import { Room } from "./Room";
 import { AppStore } from "./store";
-import { supabase, loadUserName } from "./db";
+import { loadUserName } from "./db";
 
 export function App() {
   const history = useHistory();
+  const supabase = AppStore.useState((s) => s.supabase);
 
-  // effectively, connect Supabase auth to app data store
   useEffect(() => {
-    const db = supabase();
-    const { data: authListener } = db.auth.onAuthStateChange(
+    const { data: authListener } = supabase.auth.onAuthStateChange(
       async (_, session) => {
         const currentUser = session?.user;
         if (currentUser == null) {
@@ -30,7 +29,7 @@ export function App() {
             history.push("/");
           });
         } else {
-          const username = await loadUserName(db, currentUser?.id);
+          const username = await loadUserName(supabase, currentUser?.id);
           AppStore.update((store) => {
             store.loggedIn = true;
             store.username = username;
@@ -38,6 +37,7 @@ export function App() {
         }
       }
     );
+
     return () => {
       authListener?.unsubscribe();
     };

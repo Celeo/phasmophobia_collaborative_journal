@@ -1,13 +1,14 @@
 import React from "react";
 import { Redirect, useHistory } from "react-router-dom";
 import { toast } from "bulma-toast";
-import { supabase } from "./db";
+import { AppStore } from "./store";
 
 export function AuthSignIn() {
   const [email, setEmail] = React.useState("");
   const [inputErrors, setInputErrors] = React.useState<Array<string>>([]);
   const [supabaseError, setSupabaseError] = React.useState<string | null>(null);
   const history = useHistory();
+  const supabase = AppStore.useState((s) => s.supabase);
 
   const doSetEmail = (value: string) => {
     setEmail(value);
@@ -15,7 +16,7 @@ export function AuthSignIn() {
   };
 
   const signIn = async () => {
-    const result = await supabase().auth.signIn({ email });
+    const result = await supabase.auth.signIn({ email });
     if (result.error) {
       const { error } = result;
       console.error(`Sign in error: ${error.message}`);
@@ -99,12 +100,14 @@ export function AuthSignIn() {
 }
 
 export function AuthSignOut() {
+  const supabase = AppStore.useState((s) => s.supabase);
+
   React.useEffect(() => {
     (async function () {
-      await supabase().auth.signOut();
+      await supabase.auth.signOut();
       localStorage.clear();
     })();
-  }, []);
+  });
 
   return <Redirect to="/" />;
 }

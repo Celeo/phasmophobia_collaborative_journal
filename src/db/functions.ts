@@ -6,6 +6,7 @@ import {
   colors,
   animals,
 } from "unique-names-generator";
+import { RoomModel } from "./models";
 
 interface UsernameQuery {
   username: string;
@@ -84,4 +85,54 @@ function createRandomName(): string {
     length: 2,
     dictionaries: [adjectives, colors, animals],
   });
+}
+
+export async function getRoomInfo(
+  db: SupabaseClient,
+  inviteCode: number
+): Promise<RoomModel | null> {
+  let { data, error } = await db
+    .from("room")
+    .select("*")
+    .eq("inviteCode", inviteCode);
+
+  if (error) {
+    toast({
+      message: "Error getting room data",
+      type: "is-danger",
+      position: "top-right",
+      duration: 5000,
+    });
+    return null;
+  }
+
+  if (data == null || data.length === 0) {
+    return null;
+  }
+
+  return data[0];
+}
+
+export async function createRoom(
+  db: SupabaseClient,
+  inviteCode: number
+): Promise<void> {
+  const { error } = await db.from("rooms").insert([{ inviteCode }]);
+
+  if (error) {
+    toast({
+      message: "Error creating new room",
+      type: "is-danger",
+      position: "top-right",
+      duration: 5000,
+    });
+  }
+}
+
+export async function updateRoom(
+  db: SupabaseClient,
+  id: number,
+  updates: Record<string, any>
+): Promise<void> {
+  // TODO
 }
