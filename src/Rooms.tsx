@@ -1,16 +1,60 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 
-/*
- * Honestly I'm not even sure that I'm going to have this be
- * a route in the app - people should just be creating or joining
- * a room rather than browsing. If I make a room browser, then
- * people are just going to jump around and troll other people.
- */
+const ROOM_CODE_MIN = 100_000;
+const ROOM_CODE_MAX = 999_999;
 
 export function Rooms() {
+  const history = useHistory();
+  const [roomCode, setRoomCode] = useState(0);
+  const [validRoom, setValidRoom] = useState(false);
+
+  useEffect(() => {
+    let valid = true;
+    if (roomCode < ROOM_CODE_MIN) {
+      valid = false;
+    }
+    if (roomCode > ROOM_CODE_MAX) {
+      valid = false;
+    }
+    setValidRoom(valid);
+  }, [roomCode]);
+
+  const submit = () => {
+    history.push(`/room/${roomCode}`);
+  };
+
   return (
-    <div>
-      <p className="m-text">Rooms</p>
+    <div className="content">
+      <h2>Enter the invite code</h2>
+      <div className="columns">
+        <div className="column is-4">
+          <div className="field">
+            <div className="control">
+              <input
+                className="input"
+                type="number"
+                placeholder="Room code"
+                min={ROOM_CODE_MIN}
+                max={ROOM_CODE_MAX}
+                value={roomCode}
+                onChange={(e) => setRoomCode(parseInt(e.target.value))}
+              />
+            </div>
+          </div>
+          <div className="field">
+            <div className="control">
+              <button
+                className="button is-link is-primary"
+                onClick={submit}
+                disabled={!validRoom}
+              >
+                Go
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
