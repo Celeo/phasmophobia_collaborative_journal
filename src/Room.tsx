@@ -1,7 +1,7 @@
 import { toast } from "bulma-toast";
 import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { getRoomInfo, RoomModel } from "./db";
+import { createRoom, getRoomInfo, RoomModel, TABLE_NAME_ROOM } from "./db";
 import { AppStore } from "./store";
 
 /*
@@ -41,20 +41,36 @@ export function Room() {
         return;
       }
 
+      const roomIdNum = Number(roomId);
+      if (isNaN(roomIdNum)) {
+        toast({
+          message: "Invalid room id specified",
+          type: "is-danger",
+          position: "top-right",
+          duration: 2500,
+        });
+        history.push("/rooms");
+        return;
+      }
+
       const db = supabase;
       console.log(`Attempting to load room info for ${roomId}`);
-      const data = await getRoomInfo(db, parseInt(roomId));
-      console.log("Loaded data", data);
+      let data = await getRoomInfo(db, roomIdNum);
+      if (!data) {
+        await createRoom(db, roomIdNum);
+        data = await getRoomInfo(db, roomIdNum);
+      }
       setRoomInfo(data);
     })();
   }, [history, roomId, supabase]);
 
   useEffect(() => {
     const sub = supabase
-      .from("rooms")
+      .from(TABLE_NAME_ROOM)
       .on("UPDATE", (payload) => {
         if (payload.new.inviteCode === parseInt(roomId)) {
-          // TODO
+          console.log("Got table update");
+          setRoomInfo(payload.new);
         }
       })
       .subscribe();
@@ -65,16 +81,16 @@ export function Room() {
   });
 
   return (
-    <div>
+    <div className="content">
       <p className="m-text">
         Room "<span>{roomId}</span>"
-        {roomInfo && (
-          <div>
-            <br />
-            <p>{roomInfo?.id}</p>
-          </div>
-        )}
       </p>
+      {roomInfo && (
+        <div>
+          <br />
+          <p className="m-text">{roomInfo?.id}</p>
+        </div>
+      )}
     </div>
   );
 }

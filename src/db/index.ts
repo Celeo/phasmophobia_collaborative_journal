@@ -1,6 +1,6 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
+export * from "./tables";
 export * from "./functions";
-export * from "./models";
 
 export function connectToSupabase(): SupabaseClient {
   const url = process.env.REACT_APP_SUPABASE_URL;

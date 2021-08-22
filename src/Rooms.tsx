@@ -9,6 +9,12 @@ export function Rooms() {
   const [roomCode, setRoomCode] = useState(0);
   const [validRoom, setValidRoom] = useState(false);
 
+  const doSetRoomCode = (s: string) => {
+    if (s) {
+      setRoomCode(parseInt(s));
+    }
+  };
+
   useEffect(() => {
     let valid = true;
     if (roomCode < ROOM_CODE_MIN) {
@@ -38,7 +44,7 @@ export function Rooms() {
                 min={ROOM_CODE_MIN}
                 max={ROOM_CODE_MAX}
                 value={roomCode}
-                onChange={(e) => setRoomCode(parseInt(e.target.value))}
+                onChange={(e) => doSetRoomCode(e.target.value)}
               />
             </div>
           </div>

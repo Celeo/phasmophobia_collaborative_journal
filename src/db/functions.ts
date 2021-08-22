@@ -6,7 +6,13 @@ import {
   colors,
   animals,
 } from "unique-names-generator";
-import { RoomModel } from "./models";
+import { RoomModel } from "./tables";
+import {
+  // TABLE_NAME_EVIDENCE,
+  TABLE_NAME_ROOM,
+  // TABLE_NAME_ROOM_HISTORY,
+  TABLE_NAME_USERNAME,
+} from "./tables";
 
 interface UsernameQuery {
   username: string;
@@ -17,7 +23,7 @@ export async function loadUserName(
   uuid: string
 ): Promise<string> {
   const { data, error } = await db
-    .from("usernames")
+    .from(TABLE_NAME_USERNAME)
     .select("username")
     .eq("userId", uuid);
 
@@ -46,10 +52,11 @@ async function insertNewUsername(
   name: string
 ): Promise<void> {
   const { error } = await db
-    .from("usernames")
+    .from(TABLE_NAME_USERNAME)
     .insert([{ userId: uuid, username: name }]);
 
   if (error) {
+    console.error("Error inserting new username into DB:", error);
     toast({
       message: "Error saving generated name to the database",
       type: "is-danger",
@@ -65,11 +72,12 @@ export async function updateUsername(
   name: string
 ): Promise<void> {
   const { error } = await db
-    .from("usernames")
+    .from(TABLE_NAME_USERNAME)
     .update({ username: name })
     .eq("userId", uuid);
 
   if (error) {
+    console.error("Error updating username in DB:", error);
     toast({
       message: "Error saving new name to the database",
       type: "is-danger",
@@ -92,11 +100,12 @@ export async function getRoomInfo(
   inviteCode: number
 ): Promise<RoomModel | null> {
   let { data, error } = await db
-    .from("room")
+    .from(TABLE_NAME_ROOM)
     .select("*")
     .eq("inviteCode", inviteCode);
 
   if (error) {
+    console.error("Error getting room data:", error);
     toast({
       message: "Error getting room data",
       type: "is-danger",
@@ -117,9 +126,10 @@ export async function createRoom(
   db: SupabaseClient,
   inviteCode: number
 ): Promise<void> {
-  const { error } = await db.from("rooms").insert([{ inviteCode }]);
+  const { error } = await db.from(TABLE_NAME_ROOM).insert([{ inviteCode }]);
 
   if (error) {
+    console.error("Error creating room:", error);
     toast({
       message: "Error creating new room",
       type: "is-danger",

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { loadUserName, updateUsername } from "./db";
+import { loadUserName, TABLE_NAME_USERNAME, updateUsername } from "./db";
 import { toast } from "bulma-toast";
 import { AppStore } from "./store";
 
@@ -108,7 +108,7 @@ export function Profile() {
     })();
 
     const sub = supabase
-      .from("usernames")
+      .from(TABLE_NAME_USERNAME)
       .on("UPDATE", (payload) => {
         if (payload.new.userId === userUUID) {
           setCurrentUsername(payload.new.username);

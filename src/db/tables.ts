@@ -1,4 +1,9 @@
-export interface UsernamesModel {
+export const TABLE_NAME_EVIDENCE = "evidence";
+export const TABLE_NAME_ROOM = "room";
+export const TABLE_NAME_ROOM_HISTORY = "roomHistory";
+export const TABLE_NAME_USERNAME = "username";
+
+export interface UsernameModel {
   userId: string;
   username: string;
 }
