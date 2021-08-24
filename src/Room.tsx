@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { createRoom, getRoomInfo, RoomModel, TABLE_NAME_ROOM } from "./db";
 import { AppStore } from "./store";
+import { EvidenceControls } from "./EvidenceControls";
 
 /*
  * If the user is not signed in, then they can only view the
@@ -24,6 +25,7 @@ interface RoomRouteParams {
 
 export function Room() {
   const { roomId } = useParams<RoomRouteParams>();
+  const [loading, setLoading] = useState(true);
   const [roomInfo, setRoomInfo] = useState<RoomModel | null>(null);
   const supabase = AppStore.useState((s) => s.supabase);
   const history = useHistory();
@@ -54,13 +56,13 @@ export function Room() {
       }
 
       const db = supabase;
-      console.log(`Attempting to load room info for ${roomId}`);
       let data = await getRoomInfo(db, roomIdNum);
       if (!data) {
         await createRoom(db, roomIdNum);
         data = await getRoomInfo(db, roomIdNum);
       }
       setRoomInfo(data);
+      setLoading(false);
     })();
   }, [history, roomId, supabase]);
 
@@ -82,13 +84,17 @@ export function Room() {
 
   return (
     <div className="content">
-      <p className="m-text">
-        Room "<span>{roomId}</span>"
-      </p>
+      {loading && (
+        <h3 className="has-text-centered has-text-light">Loading ...</h3>
+      )}
+      {!loading && (
+        <h1 className="has-text-centered is-underlined">
+          {roomInfo?.inviteCode}
+        </h1>
+      )}
       {roomInfo && (
         <div>
-          <br />
-          <p className="m-text">{roomInfo?.id}</p>
+          <EvidenceControls roomInfo={roomInfo} />
         </div>
       )}
     </div>

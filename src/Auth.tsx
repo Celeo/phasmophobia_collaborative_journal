@@ -104,6 +104,7 @@ export function AuthSignOut() {
 
   React.useEffect(() => {
     (async function () {
+      console.log("EVENT signing out");
       await supabase.auth.signOut();
       localStorage.clear();
     })();

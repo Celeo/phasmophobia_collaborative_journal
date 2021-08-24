@@ -6,11 +6,11 @@ import {
   colors,
   animals,
 } from "unique-names-generator";
-import { RoomModel } from "./tables";
 import {
-  // TABLE_NAME_EVIDENCE,
+  EvidenceModel,
+  RoomModel,
+  TABLE_NAME_EVIDENCE,
   TABLE_NAME_ROOM,
-  // TABLE_NAME_ROOM_HISTORY,
   TABLE_NAME_USERNAME,
 } from "./tables";
 
@@ -38,11 +38,12 @@ export async function loadUserName(
     return "-- error --";
   }
 
-  if (data == null || data.length === 0) {
+  if (!data || data.length === 0) {
     const newName = createRandomName();
     await insertNewUsername(db, uuid, newName);
     return newName;
   }
+
   return (data as Array<UsernameQuery>)[0].username;
 }
 
@@ -115,7 +116,7 @@ export async function getRoomInfo(
     return null;
   }
 
-  if (data == null || data.length === 0) {
+  if (!data || data.length === 0) {
     return null;
   }
 
@@ -145,4 +146,30 @@ export async function updateRoom(
   updates: Record<string, any>
 ): Promise<void> {
   // TODO
+}
+
+export async function getRoomEvidence(
+  db: SupabaseClient,
+  roomId: number
+): Promise<Array<EvidenceModel>> {
+  const { data, error } = await db
+    .from(TABLE_NAME_EVIDENCE)
+    .select("*")
+    .eq("roomId", roomId);
+
+  if (error) {
+    console.error("Error loading evidence:", error);
+    toast({
+      message: "Could not get evidence",
+      type: "is-danger",
+      position: "top-right",
+      duration: 5000,
+    });
+  }
+
+  if (!data || data.length === 0) {
+    return [];
+  }
+
+  return data;
 }
