@@ -1,5 +1,86 @@
 {% extends "base.html" %} {% block content %}
 
-<h2 class="title">Rooms</h2>
+<h2 class="title is-2">Rooms</h2>
+
+<h3 class="subtitle is-3 has-text-success spacing-top">Enter the room code</h3>
+
+<div id="room-form">
+  <div class="columns">
+    <div class="column" v-for="(value, index) in inputs">
+      <input
+        type="text"
+        class="input has-text-centered invite-input-field"
+        :value="value"
+        @keydown.prevent="(e) => setInput(index, e)"
+        :input-number="index"
+      />
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="column">
+      <button
+        class="button is-success is-outlined"
+        style="width: 100%"
+        :disabled="!codeValid"
+        @click="navigate"
+      >
+        Go
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+  const setIndexFocus = (index) => {
+    document.querySelector(`[input-number="${index}"]`).focus();
+  };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    Vue.createApp({
+      data() {
+        return {
+          inputs: ["", "", "", "", "", ""],
+        };
+      },
+      methods: {
+        setInput(index, event) {
+          const key = event.key;
+          let nextNum = index + 1;
+          if (nextNum === 6) {
+            nextNum = 0;
+          }
+          if (key === "Tab") {
+            setIndexFocus(nextNum);
+            return;
+          }
+          if (!numbers.includes(key)) {
+            return;
+          }
+          if (this.inputs[index].length > 0) {
+            this.inputs[index] = `${key}`;
+            setIndexFocus(nextNum);
+            return;
+          }
+          this.inputs[index] = `${key}`;
+          setIndexFocus(nextNum);
+        },
+        navigate() {
+          window.location.href = `/rooms/${this.inputs.join("")}`;
+        },
+      },
+      computed: {
+        codeValid() {
+          return this.inputs.find((i) => i === "") === undefined;
+        },
+      },
+      compilerOptions: {
+        delimiters: ["[[", "]]"],
+      },
+    }).mount("#room-form");
+  });
+</script>
 
 {% endblock %}
