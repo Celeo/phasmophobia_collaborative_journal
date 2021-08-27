@@ -1,5 +1,42 @@
 {% extends "base.html" %} {% block content %}
 
-<h2 class="title">Room {{ room_id }}</h2>
+<h2 class="title">Game code {{ room_id }}</h2>
+
+<div id="room-controls" class="spacing-top">
+  <div v-for="e in evidence">
+    <div class="columns">
+      <div class="column">
+        <span v-text="e.long" class="m-text"></span>
+      </div>
+      <div class="column">
+        <div class="buttons has-addons">
+          <button
+            class="button is-outlined"
+            :class="classFor(e, 'found')"
+            @click="updateEvidence(e, 'found')"
+          >
+            Found
+          </button>
+          <button
+            class="button is-outlined"
+            :class="classFor(e, 'unknown')"
+            @click="updateEvidence(e, 'unknown')"
+          >
+            Unknown
+          </button>
+          <button
+            class="button is-outlined"
+            :class="classFor(e, 'ignored')"
+            @click="updateEvidence(e, 'ignored')"
+          >
+            Ignored
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/roomControls.mjs" type="module"></script>
 
 {% endblock %}
