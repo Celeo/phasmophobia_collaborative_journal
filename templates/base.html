@@ -23,10 +23,20 @@
         </div>
         <div class="navbar-menu">
           <div class="navbar-start">
-            <a href="/" class="navbar-item">Home</a>
-            <div class="navbar-start">
-              <a href="/rooms" class="navbar-item">Rooms</a>
-            </div>
+            <!-- prettier-ignore -->
+            <a
+              href="/"
+              class="navbar-item {% if request.url.path == '/' %}is-active{% endif %}"
+            >
+              Home
+            </a>
+            <!-- prettier-ignore -->
+            <a
+              href="/rooms"
+              class="navbar-item {% if request.url.path == '/rooms' %}is-active{% endif %}"
+            >
+              Rooms
+            </a>
           </div>
         </div>
       </nav>

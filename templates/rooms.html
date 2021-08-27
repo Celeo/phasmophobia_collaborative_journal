@@ -30,11 +30,11 @@
 </div>
 
 <script>
-  const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  const NUMBERS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
-  const setIndexFocus = (index) => {
+  function setIndexFocus(index) {
     document.querySelector(`[input-number="${index}"]`).focus();
-  };
+  }
 
   document.addEventListener("DOMContentLoaded", () => {
     Vue.createApp({
@@ -54,7 +54,11 @@
             setIndexFocus(nextNum);
             return;
           }
-          if (!numbers.includes(key)) {
+          if (key === "Enter" && this.codeValid) {
+            this.navigate();
+            return;
+          }
+          if (!NUMBERS.includes(key)) {
             return;
           }
           if (this.inputs[index].length > 0) {
@@ -68,6 +72,9 @@
         navigate() {
           window.location.href = `/rooms/${this.inputs.join("")}`;
         },
+      },
+      mounted() {
+        setIndexFocus(0);
       },
       computed: {
         codeValid() {
