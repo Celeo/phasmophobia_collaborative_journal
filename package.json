@@ -1,61 +1,14 @@
 {
-  "name": "new_project",
-  "version": "0.1.0",
-  "private": true,
-  "author": {
-    "email": "mattboulanger@fastmail.com",
-    "name": "Celeo"
-  },
+  "name": "phasmo_collab_journal",
+  "version": "1.0.0",
+  "repository": "https://github.com/github:celeo/phasmophobia_collaborative_journal",
+  "author": "Celeo <mattboulanger@fastmail.com>",
+  "license": "MIT",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "lint": "tsc --noEmit && eslint src/**/*.{ts,tsx} && prettier --check src",
-    "lint:fix": "eslint --fix src/**/*.{ts,tsx} && prettier -w src"
+    "build:css": "node-sass --omit-source-map-url sass/site.scss static/site.css"
   },
-  "devDependencies": {
-    "@supabase/supabase-js": "^1.21.3",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
-    "@types/jest": "^26.0.15",
-    "@types/node": "^12.0.0",
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
-    "@types/react-router-dom": "^5.1.8",
-    "@types/uuid": "^8.3.1",
+  "dependencies": {
     "bulma": "^0.9.3",
-    "bulma-toast": "^2.3.1",
-    "node-sass": "^6.0.1",
-    "prettier": "^2.3.2",
-    "pullstate": "^1.22.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
-    "surge": "^0.23.0",
-    "ts-jest": "^27.0.3",
-    "typescript": "^4.1.2",
-    "unique-names-generator": "^4.6.0",
-    "uuid": "^8.3.2",
-    "web-vitals": "^1.0.1"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "node-sass": "^6.0.1"
   }
 }
