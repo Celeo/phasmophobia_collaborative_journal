@@ -2,7 +2,19 @@
 
 <h2 class="title">Game code {{ room_id }}</h2>
 
-<div id="room-controls" class="spacing-top">
+<div id="room-controls">
+  <!-- <div class="spacing-top">
+    <div class="columns">
+      <div class="column">
+        -- ghost name --
+      </div>
+      <div class="column">
+        -- secondary objectives --
+      </div>
+    </div>
+  </div> -->
+
+  <div class="spacing-top"></div>
   <div v-for="e in evidence">
     <div class="columns">
       <div class="column">
@@ -11,21 +23,21 @@
       <div class="column">
         <div class="buttons has-addons">
           <button
-            class="button is-outlined"
+            class="button is-outlined has-text-white"
             :class="classFor(e, 'found')"
             @click="updateEvidence(e, 'found')"
           >
             Found
           </button>
           <button
-            class="button is-outlined"
+            class="button is-outlined has-text-white"
             :class="classFor(e, 'unknown')"
             @click="updateEvidence(e, 'unknown')"
           >
             Unknown
           </button>
           <button
-            class="button is-outlined"
+            class="button is-outlined has-text-white"
             :class="classFor(e, 'ignored')"
             @click="updateEvidence(e, 'ignored')"
           >

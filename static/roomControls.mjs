@@ -14,20 +14,49 @@ document.addEventListener("DOMContentLoaded", () => {
   Vue.createApp({
     data() {
       return {
+        ghostName: "",
+        objectives: [],
         evidence: ALL_EVIDENCE.map((e) => {
           return { ...e, value: "unknown" };
         }),
+        roomId: Number(window.location.pathname.split("/")[2]),
         socketConnection: null,
+        log: [],
       };
     },
     async mounted() {
+      // setup websocket
       const socket = new WebSocket(`ws://${window.location.host}/ws`);
       this.socketConnection = socket;
-      socket.onmessage = (event) => {
-        console.log("Received data from websocket:", event.data);
-        // TODO
+      socket.onmessage = ({ data: dataRaw }) => {
+        const data = JSON.parse(dataRaw);
+        console.log(typeof data);
+        if (data.room !== this.roomId) {
+          return;
+        }
+        const i = this.evidence.findIndex((e) => e.short === data.evidence);
+        const newEvidence = [...this.evidence];
+        newEvidence[i].value = data.newValue;
+        this.evidence = newEvidence;
+        this.log.push(data);
       };
-      // TODO get initial state from server
+
+      // get current room state
+      fetch(`/rooms/${this.roomId}/data`)
+        .then((response) => {
+          if (!response.ok) {
+            throw `Error response code from server: ${response.status}`;
+          }
+          return response.json();
+        })
+        .then((data) => {
+          this.ghostName = _.get(data, "ghostName", "");
+          this.objectives = _.get(data, "objectives", []);
+          this.evidence = _.get(data, "evidence", this.evidence);
+        })
+        .catch((exception) => {
+          console.error("Error getting initial data:", exception);
+        });
     },
     methods: {
       classFor(ev, kind) {
@@ -46,10 +75,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const newEvidence = [...this.evidence];
         newEvidence[i].value = newValue;
         this.evidence = newEvidence;
+
         this.socketConnection.send(
           JSON.stringify({
-            room: Number(window.location.pathname.split("/")[2]),
+            room: this.roomId,
             by: localStorage.getItem("name"),
+            action: "update-evidence",
             evidence: ev.short,
             newValue,
           })
