@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Phasmophobia Collaborative Journal</title>
-    <link rel="stylesheet" href="static/site.css" />
+    <link rel="stylesheet" href="/static/site.css" />
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="Phasmophobia Collaborative Journal" />
   </head>
@@ -17,19 +17,40 @@
         aria-label="main navigation"
       >
         <div class="navbar-brand">
-          <a class="navbar-item" href="/">Collaborative Journal</a>
+          <span class="navbar-item has-text-black is-size-5">
+            Collaborative Journal
+          </span>
         </div>
         <div class="navbar-menu">
           <div class="navbar-start">
             <a href="/" class="navbar-item">Home</a>
+            <div class="navbar-start">
+              <a href="/rooms" class="navbar-item">Rooms</a>
+            </div>
           </div>
         </div>
-        <!-- TODO more navbar buttons -->
       </nav>
       <section class="section">
         <div class="container">{% block content %}{% endblock %}</div>
       </section>
     </div>
-    <script src="https://unpkg.com/vue@next"></script>
+    <script
+      src="https://unpkg.com/vue@next"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"
+      integrity="sha256-qXBd/EfAdjOA2FGrGAG+b3YBn2tn5A6bhz+LSgYD96k="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/chance/1.1.7/chance.min.js"
+      integrity="sha512-dELYIOEzIECWdvsEdoywFOB4qKDmtQee33yD0dQnzAE7eBGKJ984VQXRLs/vlsP4Sb3VchbQL7iAy4NWqetCsw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="/static/setUsername.js"></script>
   </body>
 </html>

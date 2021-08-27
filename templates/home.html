@@ -1,5 +1,100 @@
 {% extends "base.html" %} {% block content %}
 
-<h2 class="title">Home page</h2>
+<h2 class="title is-2">Home page</h2>
+
+<p class="has-text-info">
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra justo
+  urna, sit amet interdum sem molestie ac. Nam vehicula vel ante in faucibus.
+  Nulla at velit eget eros aliquet malesuada. Suspendisse potenti. Sed dictum
+  felis non velit luctus dictum. Fusce at massa odio. Pellentesque habitant
+  morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec
+  sit amet magna nibh. Nunc blandit porttitor ex, eget pharetra massa
+  consectetur eget. Integer egestas tortor nec ipsum consequat, ut aliquet
+  turpis efficitur. Aliquam quam dui, porta at ligula et, euismod vulputate
+  quam. Suspendisse quam dui, tristique non odio in, scelerisque porttitor ante.
+</p>
+<br />
+<p class="has-text-info">
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra justo
+  urna, sit amet interdum sem molestie ac. Nam vehicula vel ante in faucibus.
+  Nulla at velit eget eros aliquet malesuada. Suspendisse potenti. Sed dictum
+  felis non velit luctus dictum. Fusce at massa odio. Pellentesque habitant
+  morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec
+  sit amet magna nibh. Nunc blandit porttitor ex, eget pharetra massa
+  consectetur eget. Integer egestas tortor nec ipsum consequat, ut aliquet
+  turpis efficitur. Aliquam quam dui, porta at ligula et, euismod vulputate
+  quam. Suspendisse quam dui, tristique non odio in, scelerisque porttitor ante.
+</p>
+<br />
+<p class="has-text-info">
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra justo
+  urna, sit amet interdum sem molestie ac. Nam vehicula vel ante in faucibus.
+  Nulla at velit eget eros aliquet malesuada. Suspendisse potenti. Sed dictum
+  felis non velit luctus dictum. Fusce at massa odio. Pellentesque habitant
+  morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec
+  sit amet magna nibh. Nunc blandit porttitor ex, eget pharetra massa
+  consectetur eget. Integer egestas tortor nec ipsum consequat, ut aliquet
+  turpis efficitur. Aliquam quam dui, porta at ligula et, euismod vulputate
+  quam. Suspendisse quam dui, tristique non odio in, scelerisque porttitor ante.
+</p>
+
+<hr />
+
+<h3 class="subtitle is-4 has-text-success">Set your username</h3>
+<div class="columns" id="name-form">
+  <div class="column is-4">
+    <div class="field">
+      <div class="control">
+        <input type="text" class="input" placeholder="Name" v-model="name" />
+      </div>
+    </div>
+    <div class="field">
+      <div class="control">
+        <button
+          class="button is-link is-info"
+          @click="saveName"
+          :disabled="!saveButtonEnabled"
+        >
+          Change
+        </button>
+      </div>
+    </div>
+  </div>
+  <div style="display: none" v-show="pickedRandom">
+    <br />
+    <p class="has-text-info">
+      This name was randomly picked; feel free to change it
+    </p>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    Vue.createApp({
+      data() {
+        return {
+          name: "",
+          pickedRandom: false,
+        };
+      },
+      mounted() {
+        this.name = localStorage.getItem("name");
+        this.pickedRandom = localStorage.getItem("pickedRandom");
+        localStorage.removeItem("pickedRandom");
+      },
+      methods: {
+        saveName(event) {
+          event.preventDefault();
+          localStorage.setItem("name", this.name);
+        },
+      },
+      computed: {
+        saveButtonEnabled() {
+          return this.name.length > 0;
+        },
+      },
+    }).mount("#name-form");
+  });
+</script>
 
 {% endblock %}
