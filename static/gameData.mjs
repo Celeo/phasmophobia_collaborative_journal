@@ -203,7 +203,7 @@ export const GHOSTS = [
   },
   {
     name: "Myling",
-    description: "Quieter when hunting but make more paranormal sounds.",
+    description: "Quieter when hunting but makes more paranormal sounds.",
     evidence: {
       box: false,
       fingerprints: true,
@@ -216,8 +216,7 @@ export const GHOSTS = [
   },
   {
     name: "Goryo",
-    description:
-      "Only shows itself on camera when alone and don't really roam.",
+    description: "Only shows itself on camera when alone, doesn't really roam.",
     evidence: {
       box: false,
       fingerprints: true,
@@ -244,12 +243,22 @@ export const SECONDARY_OBJECTIVES = [
   "Get an average Sanity below 25%",
 ];
 
-export function matchingGhosts(evidence) {
+export function matchingGhosts(collectedEvidence) {
   const matching = [];
-
   for (let ghost of GHOSTS) {
-    // TODO
+    let m = true;
+    for (let name of Object.keys(ghost.evidence)) {
+      if (
+        collectedEvidence.find((e) => e.short === name).value === "ignored" &&
+        ghost.evidence[name]
+      ) {
+        m = false;
+        break;
+      }
+    }
+    if (m) {
+      matching.push(ghost);
+    }
   }
-
   return matching;
 }

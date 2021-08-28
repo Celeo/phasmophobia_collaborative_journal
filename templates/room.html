@@ -5,19 +5,23 @@
     <div class="column is-three-quarters">
       <h2 class="title">Room code: {{ room_id }}</h2>
     </div>
-    <div class="column" style="text-align: right">
-      <button class="button is-outlined" style="width: 50%" @click="resetRoom">
+    <div class="column has-text-right">
+      <button
+        class="button is-outlined has-text-white"
+        style="width: 50%"
+        @click="resetRoom"
+      >
         Reset room
       </button>
     </div>
   </div>
 
-  <div class="columns spacing-top">
+  <div class="columns spacing-top v-cloak">
     <div class="column is-3">
       <div class="field">
         <label class="label">Ghost name</label>
         <div class="control">
-          <input type="text" class="input is-rounded" placeholder="" />
+          <input type="text" class="input is-rounded" />
         </div>
       </div>
       <div class="field">
@@ -52,7 +56,7 @@
       <div v-for="e in evidence">
         <div class="columns">
           <div class="column">
-            <span v-text="e.long" class="m-text"></span>
+            <span v-text="e.long" class="has-text-info is-size-5"></span>
           </div>
           <div class="column">
             <div class="buttons has-addons">
@@ -82,9 +86,14 @@
         </div>
       </div>
     </div>
+    <div class="column is-1"></div>
     <div class="column">
       <h3 class="title is-4">Possible ghosts</h3>
-      <!-- TODO -->
+      <ul>
+        <li v-for="ghost in possibleGhosts" class="has-text-info is-size-5">
+          [[ ghost.name ]]
+        </li>
+      </ul>
     </div>
   </div>
 </div>
