@@ -2,5 +2,10 @@
 __pycache__
 *.pyc
 node_modules
-static/site.css
 phasmo_collab_journal.image.bin
+justfile
+LICENSE
+README.md
+.github
+package.json
+yarn.lock
