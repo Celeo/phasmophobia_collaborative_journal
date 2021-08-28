@@ -1,4 +1,8 @@
-import { ALL_EVIDENCE } from "./gameData.mjs";
+import {
+  ALL_EVIDENCE,
+  SECONDARY_OBJECTIVES,
+  matchingGhosts,
+} from "./gameData.mjs";
 
 function colorMapping(kind) {
   if (kind === "found") {
@@ -18,8 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
     data() {
       return {
         ghostName: "",
-        objectives: [],
+        objectives: ["", "", ""],
         evidence: [...ALL_EVIDENCE],
+        allObjectives: [...SECONDARY_OBJECTIVES],
         roomId: Number(window.location.pathname.split("/")[2]),
         socketConnection: null,
         log: [],
@@ -75,6 +80,9 @@ document.addEventListener("DOMContentLoaded", () => {
           [color]: on,
         };
       },
+      updateBasicInformation() {
+        // TODO
+      },
       updateEvidence(ev, newValue) {
         const i = this.evidence.findIndex((e) => e.short === ev.short);
         const newEvidence = [...this.evidence];
@@ -100,6 +108,14 @@ document.addEventListener("DOMContentLoaded", () => {
           })
         );
       },
+    },
+    computed: {
+      possibleGhosts() {
+        return matchingGhosts(this.evidence);
+      },
+    },
+    compilerOptions: {
+      delimiters: ["[[", "]]"],
     },
   }).mount("#room-controls");
 });

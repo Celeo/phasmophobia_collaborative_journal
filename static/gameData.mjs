@@ -1,10 +1,3 @@
-export const SELECTED = 0;
-export const NOT_SELECTED = 1;
-export const IGNORED = 2;
-
-export const MOUSE_LEFT = 0;
-export const MOUSE_RIGHT = 1;
-
 // NOTE: This data needs to be the same as in store.py
 export const ALL_EVIDENCE = [
   { short: "emf", long: "EMF 5", value: "unknown" },
@@ -236,3 +229,27 @@ export const GHOSTS = [
     },
   },
 ];
+
+export const SECONDARY_OBJECTIVES = [
+  "Have a member of your team witness a Ghost Event",
+  "Capture a photo of the Ghost",
+  "Find evidence of the paranormal with an EMF Reader",
+  "Detect a Ghosts presence with a Motion Sensor",
+  "Cleanse the area near the Ghost using Smudge Sticks",
+  "Prevent the Ghost from hunting with a Crucifix",
+  "Get a Ghost to walk through Salt",
+  "Detect a Ghost presence with a Candle",
+  "Escape the Ghost during a Hunt with no deaths",
+  "Use Smudge Sticks while the Ghost is hunting a player",
+  "Get an average Sanity below 25%",
+];
+
+export function matchingGhosts(evidence) {
+  const matching = [];
+
+  for (let ghost of GHOSTS) {
+    // TODO
+  }
+
+  return matching;
+}

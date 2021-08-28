@@ -1,9 +1,9 @@
 {% extends "base.html" %} {% block content %}
 
-<div id="room-controls">
+<div id="room-controls" class="container-larger">
   <div class="columns">
     <div class="column is-three-quarters">
-      <h2 class="title">Game code {{ room_id }}</h2>
+      <h2 class="title">Room code: {{ room_id }}</h2>
     </div>
     <div class="column" style="text-align: right">
       <button class="button is-outlined" style="width: 50%" @click="resetRoom">
@@ -12,42 +12,79 @@
     </div>
   </div>
 
-  <div class="columns">
-    <div class="column">-- ghost name --</div>
-    <div class="column">-- secondary objectives --</div>
-  </div>
-
-  <div class="spacing-top"></div>
-  <div v-for="e in evidence">
-    <div class="columns">
-      <div class="column is-two-thirds">
-        <span v-text="e.long" class="m-text"></span>
-      </div>
-      <div class="column">
-        <div class="buttons has-addons">
-          <button
-            class="button has-text-white"
-            :class="classFor(e, 'found')"
-            @click="updateEvidence(e, 'found')"
-          >
-            Found
-          </button>
-          <button
-            class="button has-text-white"
-            :class="classFor(e, 'unknown')"
-            @click="updateEvidence(e, 'unknown')"
-          >
-            Unknown
-          </button>
-          <button
-            class="button has-text-white"
-            :class="classFor(e, 'ignored')"
-            @click="updateEvidence(e, 'ignored')"
-          >
-            Ignored
-          </button>
+  <div class="columns spacing-top">
+    <div class="column is-3">
+      <div class="field">
+        <label class="label">Ghost name</label>
+        <div class="control">
+          <input type="text" class="input is-rounded" placeholder="" />
         </div>
       </div>
+      <div class="field">
+        <label class="label">Objective 2</label>
+        <div class="select is-rounded">
+          <select v-model="objectives[0]">
+            <option value="">Select an option</option>
+            <option v-for="obj in allObjectives" :value="obj">[[ obj ]]</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Objective 3</label>
+        <div class="select is-rounded">
+          <select v-model="objectives[1]">
+            <option value="">Select an option</option>
+            <option v-for="obj in allObjectives" :value="obj">[[ obj ]]</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Objective 3</label>
+        <div class="select is-rounded">
+          <select v-model="objectives[2]">
+            <option v-for="obj in allObjectives" :value="obj">[[ obj ]]</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="column is-1"></div>
+    <div class="column is-4">
+      <div v-for="e in evidence">
+        <div class="columns">
+          <div class="column">
+            <span v-text="e.long" class="m-text"></span>
+          </div>
+          <div class="column">
+            <div class="buttons has-addons">
+              <button
+                class="button has-text-white"
+                :class="classFor(e, 'found')"
+                @click="updateEvidence(e, 'found')"
+              >
+                Found
+              </button>
+              <button
+                class="button has-text-white"
+                :class="classFor(e, 'unknown')"
+                @click="updateEvidence(e, 'unknown')"
+              >
+                Unknown
+              </button>
+              <button
+                class="button has-text-white"
+                :class="classFor(e, 'ignored')"
+                @click="updateEvidence(e, 'ignored')"
+              >
+                Ignored
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="column">
+      <h3 class="title is-4">Possible ghosts</h3>
+      <!-- TODO -->
     </div>
   </div>
 </div>

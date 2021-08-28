@@ -1,30 +1,32 @@
 {% extends "base.html" %} {% block content %}
 
-<h3 class="subtitle is-3 has-text-success">Enter the room code</h3>
+<div class="container">
+  <h3 class="subtitle is-3 has-text-success">Enter the room code</h3>
 
-<div id="room-form">
-  <div class="columns">
-    <div class="column" v-for="(value, index) in inputs">
-      <input
-        type="text"
-        class="input has-text-centered invite-input-field"
-        :value="value"
-        @keydown.prevent="(e) => setInput(index, e)"
-        :input-number="index"
-      />
+  <div id="room-form">
+    <div class="columns">
+      <div class="column" v-for="(value, index) in inputs">
+        <input
+          type="text"
+          class="input has-text-centered invite-input-field"
+          :value="value"
+          @keydown.prevent="(e) => setInput(index, e)"
+          :input-number="index"
+        />
+      </div>
     </div>
-  </div>
 
-  <div class="columns">
-    <div class="column">
-      <button
-        class="button is-success is-outlined"
-        style="width: 100%"
-        :disabled="!codeValid"
-        @click="navigate"
-      >
-        Go
-      </button>
+    <div class="columns">
+      <div class="column">
+        <button
+          class="button is-success is-outlined"
+          style="width: 100%"
+          :disabled="!codeValid"
+          @click="navigate"
+        >
+          Go
+        </button>
+      </div>
     </div>
   </div>
 </div>
