@@ -14,6 +14,7 @@ function colorMapping(kind) {
   return "danger";
 }
 
+const UPDATE_BASIC = "update-basic";
 const UPDATE_EVIDENCE = "update-evidence";
 const CLEAR_ROOM = "clear-room";
 
@@ -22,7 +23,9 @@ document.addEventListener("DOMContentLoaded", () => {
     data() {
       return {
         ghostName: "",
-        objectives: ["", "", ""],
+        objective2: "",
+        objective3: "",
+        objective4: "",
         evidence: [...ALL_EVIDENCE],
         allObjectives: [...SECONDARY_OBJECTIVES],
         roomId: Number(window.location.pathname.split("/")[2]),
@@ -30,7 +33,10 @@ document.addEventListener("DOMContentLoaded", () => {
         log: [],
       };
     },
-    async mounted() {
+    created() {
+      this.debounceUpdateGhostName = _.debounce(this.updateGhostName, 500);
+    },
+    mounted() {
       // setup websocket
       const socket = new WebSocket(`ws://${window.location.host}/ws`);
       this.socketConnection = socket;
@@ -60,7 +66,9 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then((data) => {
           this.ghostName = _.get(data, "ghostName", "");
-          this.objectives = _.get(data, "objectives", []);
+          this.objective2 = _.get(data, "objectives[0]", "");
+          this.objective3 = _.get(data, "objectives[1]", "");
+          this.objective4 = _.get(data, "objectives[2]", "");
           this.evidence = _.get(data, "evidence", this.evidence);
         })
         .catch((exception) => {
@@ -80,8 +88,16 @@ document.addEventListener("DOMContentLoaded", () => {
           [color]: on,
         };
       },
-      updateBasicInformation() {
-        // TODO
+      updateGhostName(newValue) {
+        this.socketConnection.send(
+          JSON.stringify({
+            room: this.roomId,
+            by: localStorage.getItem("name"),
+            action: UPDATE_BASIC,
+            what: "ghostName",
+            newValue,
+          })
+        );
       },
       updateEvidence(ev, newValue) {
         const i = this.evidence.findIndex((e) => e.short === ev.short);
@@ -112,6 +128,44 @@ document.addEventListener("DOMContentLoaded", () => {
     computed: {
       possibleGhosts() {
         return matchingGhosts(this.evidence);
+      },
+    },
+    watch: {
+      ghostName(newValue) {
+        this.debounceUpdateGhostName(newValue);
+      },
+      objective2(newValue) {
+        this.socketConnection.send(
+          JSON.stringify({
+            room: this.roomId,
+            by: localStorage.getItem("name"),
+            action: UPDATE_BASIC,
+            what: "objective0",
+            newValue,
+          })
+        );
+      },
+      objective3(newValue) {
+        this.socketConnection.send(
+          JSON.stringify({
+            room: this.roomId,
+            by: localStorage.getItem("name"),
+            action: UPDATE_BASIC,
+            what: "objective1",
+            newValue,
+          })
+        );
+      },
+      objective4(newValue) {
+        this.socketConnection.send(
+          JSON.stringify({
+            room: this.roomId,
+            by: localStorage.getItem("name"),
+            action: UPDATE_BASIC,
+            what: "objective2",
+            newValue,
+          })
+        );
       },
     },
     compilerOptions: {

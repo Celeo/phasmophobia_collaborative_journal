@@ -77,10 +77,12 @@ async def websocket_connection(websocket: WebSocket, redis: Redis = Depends(get_
     try:
         while True:
             data = await websocket.receive_json()
-            if data["action"] == "update-evidence":
+            if data["action"] in ["update-evidence", "update-basic"]:
                 update_redis_room(redis, data)
             elif data["action"] == "clear-room":
                 clear_redis_room(redis, data["room"])
+            else:
+                print("ERROR: unknown websocket action name", data["action"])
             await manager.broadcast_json(data)
     except WebSocketDisconnect:
         manager.disconnect(websocket)
