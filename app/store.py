@@ -1,3 +1,4 @@
+from datetime import timedelta
 import json
 from typing import Any
 
@@ -10,6 +11,14 @@ def get_redis():
         yield redis
     finally:
         pass
+
+
+def get_room(redis: Redis, room_id: int):
+    data = redis.get(str(room_id))
+    if data:
+        redis.expire(str(room_id), timedelta(hours=1))
+        return json.loads(data.decode("utf-8"))
+    return {}
 
 
 def set_up_room(redis: Redis, room_id: int):
@@ -28,6 +37,7 @@ def set_up_room(redis: Redis, room_id: int):
         ],
     }
     redis.set(str(room_id), json.dumps(room_data))
+    redis.expire(str(room_id), timedelta(hours=1))
 
 
 def update_redis_room(redis: Redis, payload: dict[str, Any]):
@@ -47,6 +57,7 @@ def update_redis_room(redis: Redis, payload: dict[str, Any]):
         elif payload["what"].startswith("objective"):
             room_data["objectives"][int(payload["what"][9])] = payload["newValue"]
     redis.set(str(room_id), json.dumps(room_data))
+    redis.expire(str(room_id), timedelta(hours=1))
 
 
 def clear_redis_room(redis: Redis, room: int):

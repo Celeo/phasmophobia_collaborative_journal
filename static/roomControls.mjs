@@ -30,11 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
         allObjectives: [...SECONDARY_OBJECTIVES],
         roomId: Number(window.location.pathname.split("/")[2]),
         socketConnection: null,
-        log: [],
+        log: [], // TODO use log
       };
-    },
-    created() {
-      this.debounceUpdateGhostName = _.debounce(this.updateGhostName, 500);
     },
     mounted() {
       // setup websocket
@@ -52,10 +49,22 @@ document.addEventListener("DOMContentLoaded", () => {
           this.evidence = newEvidence;
         } else if (data.action === CLEAR_ROOM) {
           window.location.reload();
+        } else if (data.action === UPDATE_BASIC) {
+          if (data.what === "ghostName") {
+            this.ghostName = data.newValue;
+          } else if (data.what.startsWith("objective")) {
+            const index = data.what[9];
+            if (index === "0") {
+              this.objective2 = data.newValue;
+            } else if (index === "1") {
+              this.objective3 = data.newValue;
+            } else if (index === "2") {
+              this.objective4 = data.newValue;
+            }
+          }
         }
         this.log.push(data);
       };
-
       // get current room state
       fetch(`/rooms/${this.roomId}/data`)
         .then((response) => {
@@ -88,13 +97,26 @@ document.addEventListener("DOMContentLoaded", () => {
           [color]: on,
         };
       },
-      updateGhostName(newValue) {
+      updateGhostName(event) {
         this.socketConnection.send(
           JSON.stringify({
             room: this.roomId,
             by: localStorage.getItem("name"),
             action: UPDATE_BASIC,
             what: "ghostName",
+            newValue: event.target.value,
+          })
+        );
+      },
+      updateObjective(event) {
+        const index = event.target.getAttribute("obj-id");
+        const newValue = event.target.value;
+        this.socketConnection.send(
+          JSON.stringify({
+            room: this.roomId,
+            by: localStorage.getItem("name"),
+            action: UPDATE_BASIC,
+            what: `objective${index}`,
             newValue,
           })
         );
@@ -104,7 +126,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const newEvidence = [...this.evidence];
         newEvidence[i].value = newValue;
         this.evidence = newEvidence;
-
         this.socketConnection.send(
           JSON.stringify({
             room: this.roomId,
@@ -128,44 +149,6 @@ document.addEventListener("DOMContentLoaded", () => {
     computed: {
       possibleGhosts() {
         return matchingGhosts(this.evidence);
-      },
-    },
-    watch: {
-      ghostName(newValue) {
-        this.debounceUpdateGhostName(newValue);
-      },
-      objective2(newValue) {
-        this.socketConnection.send(
-          JSON.stringify({
-            room: this.roomId,
-            by: localStorage.getItem("name"),
-            action: UPDATE_BASIC,
-            what: "objective0",
-            newValue,
-          })
-        );
-      },
-      objective3(newValue) {
-        this.socketConnection.send(
-          JSON.stringify({
-            room: this.roomId,
-            by: localStorage.getItem("name"),
-            action: UPDATE_BASIC,
-            what: "objective1",
-            newValue,
-          })
-        );
-      },
-      objective4(newValue) {
-        this.socketConnection.send(
-          JSON.stringify({
-            room: this.roomId,
-            by: localStorage.getItem("name"),
-            action: UPDATE_BASIC,
-            what: "objective2",
-            newValue,
-          })
-        );
       },
     },
     compilerOptions: {

@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 from redis import Redis
 
 from .websocket import ConnectionManager
-from .store import get_redis, set_up_room, update_redis_room, clear_redis_room
+from .store import get_redis, get_room, set_up_room, update_redis_room, clear_redis_room
 
 
 app = FastAPI()
@@ -51,10 +51,7 @@ async def room_data(room_id: int, redis: Redis = Depends(get_redis)):
     be accurate, but as not all clients may join before
     one of the clients start making changes to the room's state.
     """
-    data = redis.get(str(room_id))
-    if data:
-        return json.loads(data.decode("utf-8"))
-    return {}
+    return get_room(redis, room_id)
 
 
 @app.websocket("/ws")
