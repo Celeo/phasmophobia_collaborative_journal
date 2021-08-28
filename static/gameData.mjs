@@ -169,7 +169,7 @@ export const GHOSTS = [
       box: false,
       fingerprints: false,
       writing: false,
-      orbs: true,
+      orbs: false,
       emf: false,
       freezing: true,
       dots: true,
