@@ -1,0 +1,12 @@
+[Unit]
+Description=Redis
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=podman run --rm --name=redis docker.io/library/redis:latest
+ExecStop=podman stop redis -t 5
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

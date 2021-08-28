@@ -1,0 +1,13 @@
+[Unit]
+Description=Website
+After=network.target
+Wants=redis_image.service
+
+[Service]
+Type=simple
+ExecStart=/srv/start_journal.sh
+ExecStop=podman stop phasmo_collab_journal -t 5
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

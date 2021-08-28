@@ -1,12 +1,13 @@
 from datetime import timedelta
 import json
+import os
 from typing import Any
 
 from redis import Redis
 
 
 def get_redis():
-    redis = Redis()
+    redis = Redis(os.getenv('REDIS_URL', 'localhost'))
     try:
         yield redis
     finally:
