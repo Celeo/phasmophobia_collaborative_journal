@@ -5,14 +5,15 @@ export const IGNORED = 2;
 export const MOUSE_LEFT = 0;
 export const MOUSE_RIGHT = 1;
 
+// NOTE: This data needs to be the same as in store.py
 export const ALL_EVIDENCE = [
-  { short: "emf", long: "EMF 5" },
-  { short: "fingerprints", long: "Fingerprints" },
-  { short: "freezing", long: "Freezing" },
-  { short: "orbs", long: "Ghost Orbs" },
-  { short: "writing", long: "Book writing" },
-  { short: "box", long: "Spirit Box" },
-  { short: "dots", long: "D.O.T.S Projector" },
+  { short: "emf", long: "EMF 5", value: "unknown" },
+  { short: "fingerprints", long: "Fingerprints", value: "unknown" },
+  { short: "freezing", long: "Freezing", value: "unknown" },
+  { short: "orbs", long: "Ghost Orbs", value: "unknown" },
+  { short: "writing", long: "Book writing", value: "unknown" },
+  { short: "box", long: "Spirit Box", value: "unknown" },
+  { short: "dots", long: "D.O.T.S Projector", value: "unknown" },
 ];
 
 export const GHOSTS = [

@@ -1,43 +1,46 @@
 {% extends "base.html" %} {% block content %}
 
-<h2 class="title">Game code {{ room_id }}</h2>
-
 <div id="room-controls">
-  <!-- <div class="spacing-top">
-    <div class="columns">
-      <div class="column">
-        -- ghost name --
-      </div>
-      <div class="column">
-        -- secondary objectives --
-      </div>
+  <div class="columns">
+    <div class="column is-three-quarters">
+      <h2 class="title">Game code {{ room_id }}</h2>
     </div>
-  </div> -->
+    <div class="column" style="text-align: right">
+      <button class="button is-outlined" style="width: 50%" @click="resetRoom">
+        Reset room
+      </button>
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="column">-- ghost name --</div>
+    <div class="column">-- secondary objectives --</div>
+  </div>
 
   <div class="spacing-top"></div>
   <div v-for="e in evidence">
     <div class="columns">
-      <div class="column">
+      <div class="column is-two-thirds">
         <span v-text="e.long" class="m-text"></span>
       </div>
       <div class="column">
         <div class="buttons has-addons">
           <button
-            class="button is-outlined has-text-white"
+            class="button has-text-white"
             :class="classFor(e, 'found')"
             @click="updateEvidence(e, 'found')"
           >
             Found
           </button>
           <button
-            class="button is-outlined has-text-white"
+            class="button has-text-white"
             :class="classFor(e, 'unknown')"
             @click="updateEvidence(e, 'unknown')"
           >
             Unknown
           </button>
           <button
-            class="button is-outlined has-text-white"
+            class="button has-text-white"
             :class="classFor(e, 'ignored')"
             @click="updateEvidence(e, 'ignored')"
           >

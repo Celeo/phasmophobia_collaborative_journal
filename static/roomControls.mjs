@@ -10,15 +10,16 @@ function colorMapping(kind) {
   return "danger";
 }
 
+const UPDATE_EVIDENCE = "update-evidence";
+const CLEAR_ROOM = "clear-room";
+
 document.addEventListener("DOMContentLoaded", () => {
   Vue.createApp({
     data() {
       return {
         ghostName: "",
         objectives: [],
-        evidence: ALL_EVIDENCE.map((e) => {
-          return { ...e, value: "unknown" };
-        }),
+        evidence: [...ALL_EVIDENCE],
         roomId: Number(window.location.pathname.split("/")[2]),
         socketConnection: null,
         log: [],
@@ -30,14 +31,17 @@ document.addEventListener("DOMContentLoaded", () => {
       this.socketConnection = socket;
       socket.onmessage = ({ data: dataRaw }) => {
         const data = JSON.parse(dataRaw);
-        console.log(typeof data);
         if (data.room !== this.roomId) {
           return;
         }
-        const i = this.evidence.findIndex((e) => e.short === data.evidence);
-        const newEvidence = [...this.evidence];
-        newEvidence[i].value = data.newValue;
-        this.evidence = newEvidence;
+        if (data.action === UPDATE_EVIDENCE) {
+          const i = this.evidence.findIndex((e) => e.short === data.evidence);
+          const newEvidence = [...this.evidence];
+          newEvidence[i].value = data.newValue;
+          this.evidence = newEvidence;
+        } else if (data.action === CLEAR_ROOM) {
+          window.location.reload();
+        }
         this.log.push(data);
       };
 
@@ -66,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
         );
         const on = matchingEvidence.value === kind;
         return {
+          "is-outlined": !on,
           "is-selected": on,
           [color]: on,
         };
@@ -80,9 +85,18 @@ document.addEventListener("DOMContentLoaded", () => {
           JSON.stringify({
             room: this.roomId,
             by: localStorage.getItem("name"),
-            action: "update-evidence",
+            action: UPDATE_EVIDENCE,
             evidence: ev.short,
             newValue,
+          })
+        );
+      },
+      resetRoom() {
+        this.socketConnection.send(
+          JSON.stringify({
+            room: this.roomId,
+            by: localStorage.getItem("name"),
+            action: CLEAR_ROOM,
           })
         );
       },
