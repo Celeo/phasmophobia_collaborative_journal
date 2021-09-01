@@ -7,7 +7,7 @@ from redis import Redis
 
 
 def get_redis():
-    redis = Redis(os.getenv('REDIS_URL', 'localhost'))
+    redis = Redis(os.getenv("REDIS_URL", "localhost"))
     try:
         yield redis
     finally:
@@ -27,7 +27,7 @@ def set_up_room(redis: Redis, room_id: int):
         "ghostName": "",
         "objectives": ["", "", ""],
         "evidence": [
-            # NOTE: This data needs to be the same as in gameData.mjs
+            # NOTE: These value data need to be the same as in gameData.mjs
             {"short": "emf", "long": "EMF 5", "value": "unknown"},
             {"short": "fingerprints", "long": "Fingerprints", "value": "unknown"},
             {"short": "freezing", "long": "Freezing", "value": "unknown"},

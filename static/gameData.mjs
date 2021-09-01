@@ -1,4 +1,4 @@
-// NOTE: This data needs to be the same as in store.py
+// NOTE: This constant needs to be the same as in store.py
 export const ALL_EVIDENCE = [
   { short: "emf", long: "EMF 5", value: "unknown" },
   { short: "fingerprints", long: "Fingerprints", value: "unknown" },
@@ -170,21 +170,8 @@ export const GHOSTS = [
       fingerprints: false,
       writing: false,
       orbs: false,
-      emf: false,
+      emf: true,
       freezing: true,
-      dots: true,
-    },
-  },
-  {
-    name: "Yokai",
-    description: "Attracted to and angered by talking.",
-    evidence: {
-      box: true,
-      fingerprints: false,
-      writing: false,
-      orbs: true,
-      emf: false,
-      freezing: false,
       dots: true,
     },
   },
@@ -202,16 +189,16 @@ export const GHOSTS = [
     },
   },
   {
-    name: "Myling",
-    description: "Quieter when hunting but makes more paranormal sounds.",
+    name: "Yokai",
+    description: "Attracted to and angered by talking.",
     evidence: {
-      box: false,
-      fingerprints: true,
-      writing: true,
-      orbs: false,
-      emf: true,
+      box: true,
+      fingerprints: false,
+      writing: false,
+      orbs: true,
+      emf: false,
       freezing: false,
-      dots: false,
+      dots: true,
     },
   },
   {
@@ -225,6 +212,19 @@ export const GHOSTS = [
       emf: true,
       freezing: false,
       dots: true,
+    },
+  },
+  {
+    name: "Myling",
+    description: "Quieter when hunting but makes more paranormal sounds.",
+    evidence: {
+      box: false,
+      fingerprints: true,
+      writing: true,
+      orbs: false,
+      emf: true,
+      freezing: false,
+      dots: false,
     },
   },
 ];
